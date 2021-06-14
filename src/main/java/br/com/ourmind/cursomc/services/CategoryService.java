@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.ourmind.cursomc.domains.Category;
 import br.com.ourmind.cursomc.repositories.CategoryRepository;
-import br.com.ourmind.cursomc.services.exeptions.NotFoundResourceExeption;
+import br.com.ourmind.cursomc.services.exeptions.NotFoundResourceException;
 
 @Service
 public class CategoryService {
@@ -18,7 +18,7 @@ public class CategoryService {
 	
 	public Category getById(Integer id) {
 		Optional<Category> category = this.categoryRepository.findById(id);
-		return category.orElseThrow(()-> new NotFoundResourceExeption("Produto não encontrado"));
+		return category.orElseThrow(()-> new NotFoundResourceException("Produto não encontrado"));
 	}
 	
 	

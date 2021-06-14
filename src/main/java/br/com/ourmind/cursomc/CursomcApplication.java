@@ -7,12 +7,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import br.com.ourmind.cursomc.domains.Address;
 import br.com.ourmind.cursomc.domains.Category;
 import br.com.ourmind.cursomc.domains.City;
+import br.com.ourmind.cursomc.domains.Client;
 import br.com.ourmind.cursomc.domains.Product;
 import br.com.ourmind.cursomc.domains.State;
+import br.com.ourmind.cursomc.domains.enums.TypeClient;
+import br.com.ourmind.cursomc.services.AddressService;
 import br.com.ourmind.cursomc.services.CategoryService;
 import br.com.ourmind.cursomc.services.CityService;
+import br.com.ourmind.cursomc.services.ClientService;
 import br.com.ourmind.cursomc.services.ProductService;
 import br.com.ourmind.cursomc.services.StateService;
 
@@ -30,6 +35,12 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private StateService stateService;
+	
+	@Autowired
+	private ClientService clientService;
+	
+	@Autowired
+	private AddressService addressService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -67,7 +78,18 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		this.stateService.saveAll(Arrays.asList(s1, s2));
 		this.cityService.saveAll(Arrays.asList(city1, city2, city3));
-
+		
+		
+		Client client1 = new Client(null, "Marial Silva", "maria@gmaill.com", "33344455567", TypeClient.LEGAL_PERSON);
+		client1.getPhones().addAll(Arrays.asList("8599989339", "8599189339"));
+		
+		Address adr1 = new Address(null, "Rua c", "03", "Alto alegre", "60821470", client1, city1);
+		Address adr2 = new Address(null, "Rua b", "03", "Alto alegre", "60821470", client1, city2);
+		
+		client1.getAdresses().addAll(Arrays.asList(adr1, adr2));
+		
+		this.clientService.saveAll(Arrays.asList(client1));
+		this.addressService.saveAll(Arrays.asList(adr1, adr2));
 	}
 
 }

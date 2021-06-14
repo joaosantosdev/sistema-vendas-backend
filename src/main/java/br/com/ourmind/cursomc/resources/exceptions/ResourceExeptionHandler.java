@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.ourmind.cursomc.services.exeptions.NotFoundResourceExeption;
+import br.com.ourmind.cursomc.services.exeptions.NotFoundResourceException;
 
 @ControllerAdvice
 public class ResourceExeptionHandler {
 	
-	@ExceptionHandler(NotFoundResourceExeption.class)
-	public ResponseEntity<ResponseError> notFoundResourceExeption(NotFoundResourceExeption exception, HttpServletRequest request){
+	@ExceptionHandler(NotFoundResourceException.class)
+	public ResponseEntity<ResponseError> notFoundResourceExeption(NotFoundResourceException exception, HttpServletRequest request){
 		
 		ResponseError error = new ResponseError(HttpStatus.NOT_FOUND.value(), exception.getMessage(), System.currentTimeMillis());
 	
