@@ -1,5 +1,6 @@
 package br.com.ourmind.cursomc;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,20 @@ import br.com.ourmind.cursomc.domains.Address;
 import br.com.ourmind.cursomc.domains.Category;
 import br.com.ourmind.cursomc.domains.City;
 import br.com.ourmind.cursomc.domains.Client;
+import br.com.ourmind.cursomc.domains.Order;
+import br.com.ourmind.cursomc.domains.Payment;
+import br.com.ourmind.cursomc.domains.PaymentCard;
+import br.com.ourmind.cursomc.domains.PaymentSlip;
 import br.com.ourmind.cursomc.domains.Product;
 import br.com.ourmind.cursomc.domains.State;
+import br.com.ourmind.cursomc.domains.enums.StatePayment;
 import br.com.ourmind.cursomc.domains.enums.TypeClient;
 import br.com.ourmind.cursomc.services.AddressService;
 import br.com.ourmind.cursomc.services.CategoryService;
 import br.com.ourmind.cursomc.services.CityService;
 import br.com.ourmind.cursomc.services.ClientService;
+import br.com.ourmind.cursomc.services.OrderService;
+import br.com.ourmind.cursomc.services.PaymentService;
 import br.com.ourmind.cursomc.services.ProductService;
 import br.com.ourmind.cursomc.services.StateService;
 
@@ -41,6 +49,13 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private AddressService addressService;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private PaymentService paymentService;
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -90,6 +105,22 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		this.clientService.saveAll(Arrays.asList(client1));
 		this.addressService.saveAll(Arrays.asList(adr1, adr2));
+		
+		SimpleDateFormat d1 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Order order1 = new Order(null, d1.parse("25/09/2021 14:00"), client1, adr1);
+		Order order2 = new Order(null, d1.parse("20/09/2021 13:00"), client1, adr2);
+		
+		Payment payment1 = new PaymentCard(null, StatePayment.FINISHED, order1, 6);
+		order1.setPayment(payment1);
+		
+		Payment payment2 = new PaymentSlip(null, StatePayment.PENDENT, order2, d1.parse("20/10/2021 00:00"), null);
+		order2.setPayment(payment2);
+		
+		client1.getOrders().addAll(Arrays.asList(order1, order2));
+		
+		this.orderService.saveAll(Arrays.asList(order1, order2));
+		this.paymentService.saveAll(Arrays.asList(payment1, payment2));
+
 	}
 
 }
