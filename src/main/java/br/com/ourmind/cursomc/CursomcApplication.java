@@ -12,6 +12,7 @@ import br.com.ourmind.cursomc.domains.Address;
 import br.com.ourmind.cursomc.domains.Category;
 import br.com.ourmind.cursomc.domains.City;
 import br.com.ourmind.cursomc.domains.Client;
+import br.com.ourmind.cursomc.domains.Item;
 import br.com.ourmind.cursomc.domains.Order;
 import br.com.ourmind.cursomc.domains.Payment;
 import br.com.ourmind.cursomc.domains.PaymentCard;
@@ -24,6 +25,7 @@ import br.com.ourmind.cursomc.services.AddressService;
 import br.com.ourmind.cursomc.services.CategoryService;
 import br.com.ourmind.cursomc.services.CityService;
 import br.com.ourmind.cursomc.services.ClientService;
+import br.com.ourmind.cursomc.services.ItemService;
 import br.com.ourmind.cursomc.services.OrderService;
 import br.com.ourmind.cursomc.services.PaymentService;
 import br.com.ourmind.cursomc.services.ProductService;
@@ -55,6 +57,9 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	private PaymentService paymentService;
+	
+	@Autowired
+	private ItemService itemOrderService;
 	
 	
 	public static void main(String[] args) {
@@ -120,7 +125,19 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		this.orderService.saveAll(Arrays.asList(order1, order2));
 		this.paymentService.saveAll(Arrays.asList(payment1, payment2));
-
+		
+		Item io1 = new Item(order1, p1, 0.00, 1, 2000.0);
+		Item io2 = new Item(order1, p3, 0.00, 2, 80.0);
+		Item io3 = new Item(order2, p2, 100.0, 1, 800.0);
+		
+		order1.getItems().addAll(Arrays.asList(io1, io2));
+		order2.getItems().addAll(Arrays.asList(io3));
+		
+		p1.getItems().addAll(Arrays.asList(io1));
+		p2.getItems().addAll(Arrays.asList(io3));
+		p3.getItems().addAll(Arrays.asList(io2));
+		
+		this.itemOrderService.saveAll(Arrays.asList(io1, io2, io3));
 	}
 
 }

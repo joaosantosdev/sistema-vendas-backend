@@ -2,6 +2,8 @@ package br.com.ourmind.cursomc.domains;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,8 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name="order_table")
@@ -22,6 +27,7 @@ public class Order implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
+	@JsonFormat(pattern="dd/MM/yyyy HH:mm")
 	private Date date;
 	
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="order")
@@ -34,6 +40,9 @@ public class Order implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="address_delivery_id")
 	private Address addressDelivery;
+	
+	@OneToMany(mappedBy="id.order")
+	private Set<Item> items = new HashSet<Item>();
 	
 	public Order() {}
 
@@ -84,6 +93,15 @@ public class Order implements Serializable{
 	public void setAddressDelivery(Address addressDelivery) {
 		this.addressDelivery = addressDelivery;
 	}
+	
+	public Set<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<Item> items) {
+		this.items = items;
+	}
+	
 
 	@Override
 	public int hashCode() {
@@ -109,10 +127,6 @@ public class Order implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-	
 
-	
 	
 }

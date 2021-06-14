@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.ourmind.cursomc.domains.enums.StatePayment;
 
 @Entity
@@ -25,6 +27,7 @@ public  abstract class Payment implements Serializable{
 	@OneToOne
 	@JoinColumn(name="order_id")
 	@MapsId
+	@JsonIgnore
 	private Order order;
 	
 	public Payment() {}
@@ -48,7 +51,7 @@ public  abstract class Payment implements Serializable{
 	}
 
 	public StatePayment getStatePayment() {
-		return StatePayment.toEnum(this.id);
+		return StatePayment.toEnum(this.statePayment);
 	}
 
 	public void setStatePayment(StatePayment statePayment) {
