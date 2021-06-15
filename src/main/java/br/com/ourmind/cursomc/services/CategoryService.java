@@ -21,6 +21,10 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
+	public void saveAll(List<Category> categories) {
+		this.categoryRepository.saveAll(categories);
+	}
+	
 	public Category save(Category category) {
 		category.setId(null);
 		return this.categoryRepository.save(category);
@@ -33,11 +37,7 @@ public class CategoryService {
 	
 	public Category getById(Integer id) {
 		Optional<Category> category = this.categoryRepository.findById(id);
-		return category.orElseThrow(()-> new NotFoundResourceException("Categoria não encontrado"));
-	}
-	
-	public void saveAll(List<Category> categories) {
-		this.categoryRepository.saveAll(categories);
+		return category.orElseThrow(()-> new NotFoundResourceException("Cliente não encontrado"));
 	}
 	
 	public void deleteById(Integer id) {
