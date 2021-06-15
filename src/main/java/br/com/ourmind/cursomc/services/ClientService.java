@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.ourmind.cursomc.domains.Client;
-import br.com.ourmind.cursomc.domains.Client;
 import br.com.ourmind.cursomc.repositories.ClientRepository;
 import br.com.ourmind.cursomc.services.exeptions.DataIntegrityException;
 import br.com.ourmind.cursomc.services.exeptions.NotFoundResourceException;
@@ -36,7 +35,7 @@ public class ClientService {
 	
 	public Client update(Integer id, Client clientData) {
 		Client client = this.getById(id);
-		updateData(client, clientData);
+		this.updateData(client, clientData);
 		return this.clientRepository.save(client);
 	}
 	

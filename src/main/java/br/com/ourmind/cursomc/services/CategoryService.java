@@ -30,8 +30,9 @@ public class CategoryService {
 		return this.categoryRepository.save(category);
 	}
 	
-	public Category update(Integer id, Category category) {
-		this.getById(id);
+	public Category update(Integer id, Category categoryData) {
+		Category category = this.getById(id);
+		this.updateData(category, categoryData);
 		return this.categoryRepository.save(category);
 	}
 	
@@ -56,5 +57,9 @@ public class CategoryService {
 	public Page<Category> getPage(Integer page, Integer perPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, perPage, Direction.valueOf(direction), orderBy);
 		return this.categoryRepository.findAll(pageRequest);
+	}
+	
+	public void updateData(Category category, Category categoryData) {
+		category.setName(categoryData.getName());
 	}
 }
