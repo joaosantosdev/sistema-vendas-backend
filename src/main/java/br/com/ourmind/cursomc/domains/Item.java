@@ -33,6 +33,10 @@ public class Item implements Serializable{
 		return id;
 	}
 
+	public Double getSubTotal() {
+		return (this.price - this.discount) * this.quantity;
+	}
+	
 	public void setId(ItemPK id) {
 		this.id = id;
 	}
@@ -66,9 +70,17 @@ public class Item implements Serializable{
 		return this.id.getOrder();
 	}
 	
+	public void setOrder(Order order) {
+		this.id.setOrder(order);
+	}
+	
 
 	public Product getProduct() {
 		return this.id.getProduct();
+	}
+	
+	public void setProduct(Product product) {
+		this.id.setProduct(product);
 	}
 
 	@Override

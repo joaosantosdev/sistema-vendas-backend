@@ -15,6 +15,9 @@ public class PaymentService {
 	private PaymentRepository paymentRepository;
 	
 	
+	public Payment save(Payment payments) {
+		return this.paymentRepository.save(payments);
+	}
 	
 	public void saveAll(List<Payment> payments) {
 		this.paymentRepository.saveAll(payments);

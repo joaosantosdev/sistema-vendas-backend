@@ -53,6 +53,14 @@ public class Order implements Serializable{
 		this.client = client;
 		this.addressDelivery = addressDelivery;
 	}
+	
+	public Double getValueTotal() {
+
+		return this.items
+				.stream()
+				.map(item->item.getSubTotal())
+				.reduce(0.0, (sum, value) -> sum + value);
+	}
 
 	public Integer getId() {
 		return id;

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ourmind.cursomc.domains.Client;
 import br.com.ourmind.cursomc.repositories.ClientRepository;
@@ -21,6 +22,9 @@ public class ClientService {
 	@Autowired
 	private ClientRepository clientRepository;
 	
+	@Autowired
+	private AddressService addressService;
+	
 	
 	
 	public void saveAll(List<Client> clients) {
@@ -28,8 +32,10 @@ public class ClientService {
 	}
 
 	
+	@Transactional
 	public Client save(Client client) {
 		client.setId(null);
+		this.addressService.saveAll(client.getAdresses());
 		return this.clientRepository.save(client);
 	}
 	
@@ -65,5 +71,9 @@ public class ClientService {
 	public void updateData(Client client,Client clientData){
 		client.setName(clientData.getName());
 		client.setEmail(clientData.getEmail());
+	}
+	
+	public Client getByEmail(String email) {
+		return this.clientRepository.findByEmail(email);
 	}
 }

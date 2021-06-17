@@ -2,9 +2,12 @@ package br.com.ourmind.cursomc.domains;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import br.com.ourmind.cursomc.domains.enums.StatePayment;
 
 @Entity
+@JsonTypeName("paymentCard")
 public class PaymentCard extends Payment{
 	private static final long serialVersionUID = 1L;
 

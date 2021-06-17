@@ -1,5 +1,6 @@
 package br.com.ourmind.cursomc.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.ourmind.cursomc.domains.Category;
 import br.com.ourmind.cursomc.domains.Client;
 import br.com.ourmind.cursomc.dto.ClientDTO;
+import br.com.ourmind.cursomc.dto.ClientNewDTO;
 import br.com.ourmind.cursomc.services.ClientService;
 
 @RestController
@@ -26,6 +30,12 @@ public class ClientResource {
 	@Autowired
 	private ClientService clientService;
 	
+	@RequestMapping(method=RequestMethod.POST)
+	public ResponseEntity<Void> save(@Valid @RequestBody ClientNewDTO clientNewDTO) {
+		Client clientCreated = this.clientService.save(clientNewDTO.toEntity());
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(clientCreated.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
 
 
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
