@@ -85,7 +85,7 @@ public class DBService {
 		this.cityService.saveAll(Arrays.asList(city1, city2, city3));
 		
 		
-		Client client1 = new Client(null, "Marial Silva", "maria@gmaill.com", "33344455567", TypeClient.LEGAL_PERSON);
+		Client client1 = new Client(null, "Marial Silva", "joaoltj09@gmail.com", "33344455567", TypeClient.LEGAL_PERSON);
 		client1.getPhones().addAll(Arrays.asList("8599989339", "8599189339"));
 		
 		Address adr1 = new Address(null, "Rua c", "03", "Alto alegre", "60821470", client1, city1);
