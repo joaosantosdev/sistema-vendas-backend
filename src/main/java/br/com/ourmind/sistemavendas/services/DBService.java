@@ -19,6 +19,7 @@ import br.com.ourmind.sistemavendas.domains.PaymentCard;
 import br.com.ourmind.sistemavendas.domains.PaymentSlip;
 import br.com.ourmind.sistemavendas.domains.Product;
 import br.com.ourmind.sistemavendas.domains.State;
+import br.com.ourmind.sistemavendas.domains.enums.Profile;
 import br.com.ourmind.sistemavendas.domains.enums.StatePayment;
 import br.com.ourmind.sistemavendas.domains.enums.TypeClient;
 
@@ -88,16 +89,25 @@ public class DBService {
 		this.cityService.saveAll(Arrays.asList(city1, city2, city3));
 		
 		
-		Client client1 = new Client(null, "Marial Silva", "joaoltj09@gmail.com", "33344455567", TypeClient.LEGAL_PERSON, this.bCryptPasswordEncoder.encode("12345678"));
+		Client client1 = new Client(null, "Camila Regina Carolina Moreira", "maria@gmail.com", "98213730038", TypeClient.NATURAL_PERSON, this.bCryptPasswordEncoder.encode("12345678"));
 		client1.getPhones().addAll(Arrays.asList("8599989339", "8599189339"));
 		
-		Address adr1 = new Address(null, "Rua c", "03", "Alto alegre", "60821470", client1, city1);
-		Address adr2 = new Address(null, "Rua b", "03", "Alto alegre", "60821470", client1, city2);
+		Address adr1 = new Address(null, "Rua c", "03", "Centro Sul", "(65) 98430-7190", client1, city1);
+		Address adr2 = new Address(null, "Rua b", "03", "Centro Sul", "(65) 3533-1595", client1, city2);
 		
 		client1.getAdresses().addAll(Arrays.asList(adr1, adr2));
 		
-		this.clientService.saveAll(Arrays.asList(client1));
-		this.addressService.saveAll(Arrays.asList(adr1, adr2));
+		
+		Client client2 = new Client(null, "joao", "joaoltj09@gmail.com", "19407382000109", TypeClient.LEGAL_PERSON, this.bCryptPasswordEncoder.encode("12345678"));
+		client2.getPhones().addAll(Arrays.asList("8599989339", "8599189339"));
+		client2.addProfile(Profile.ADMIN);
+		
+		Address adr3 = new Address(null, "Rua c", "03", "Alto alegre", "60821470", client2, city1);
+		
+		client2.getAdresses().addAll(Arrays.asList(adr3));
+		
+		this.clientService.saveAll(Arrays.asList(client1, client2));
+		this.addressService.saveAll(Arrays.asList(adr1, adr2, adr3));
 		
 		SimpleDateFormat d1 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Order order1 = new Order(null, d1.parse("25/09/2021 14:00"), client1, adr1);

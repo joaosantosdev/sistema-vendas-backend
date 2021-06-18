@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +20,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.ourmind.sistemavendas.domains.enums.Profile;
 import br.com.ourmind.sistemavendas.domains.enums.TypeClient;
 
 @Entity
@@ -29,6 +33,7 @@ public class Client implements Serializable {
 
 	private String name;
 
+	@Column(unique=true)
 	private String email;
 
 	private String cpfCnpj;
@@ -44,12 +49,17 @@ public class Client implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "phone")
 	private Set<String> phones = new HashSet<String>();
+	
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "profile")
+	private Set<Integer> profiles = new HashSet<Integer>();
 
 	@OneToMany(mappedBy = "client")
 	@JsonIgnore
 	private List<Order> orders = new ArrayList<Order>();
 
 	public Client() {
+		this.addProfile(Profile.CLIENT);
 	}
 
 	public Client(Integer id, String name, String email, String cpfCnpj, TypeClient typeClient, String password) {
@@ -60,6 +70,7 @@ public class Client implements Serializable {
 		this.cpfCnpj = cpfCnpj;
 		this.typeClient = typeClient == null ? null : typeClient.getId();
 		this.password = password;
+		this.addProfile(Profile.CLIENT);
 	}
 
 	public Integer getId() {
@@ -109,7 +120,19 @@ public class Client implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
+	public Set<Profile> getProfiles(){
+		return this.profiles.stream().map(p-> Profile.toEnum(p)).collect(Collectors.toSet());
+	}
+	
+	public void setProfiles(Set<Profile> profiles) {
+		this.profiles = profiles.stream().map(p -> p.getId()).collect(Collectors.toSet());
+	}
+	
+	public void addProfile(Profile profile) {
+		this.profiles.add(profile.getId());
+	}
+	
 	public List<Address> getAdresses() {
 		return adresses;
 	}
