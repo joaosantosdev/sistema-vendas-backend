@@ -7,14 +7,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import br.com.ourmind.sistemavendas.security.JWTAuthenticationFilter;
+import br.com.ourmind.sistemavendas.security.JWTAuthorizationFilter;
+import br.com.ourmind.sistemavendas.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +29,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private Environment env;
 	
+	@Autowired
+	private JWTUtil jwtUtil;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
 	private static final String[] PUBLIC_MATCHERS = {
 			"/h2-console/**",
 	};
@@ -30,8 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private static final String[] PUBLIC_MATCHERS_GET = {
 			"/products/**",
 			"/categories/**",
-			"/clients/**",
-
 	};
 	
 	@Override
@@ -48,6 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers(SecurityConfig.PUBLIC_MATCHERS).permitAll()
 		.anyRequest().authenticated();
 		
+		http.addFilter(new JWTAuthenticationFilter(this.authenticationManager(), this.jwtUtil));
+		
+		http.addFilter(new JWTAuthorizationFilter(this.authenticationManager(), this.jwtUtil, this.userDetailsService));
+		
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
@@ -62,6 +76,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+	
+	public void configurer(AuthenticationManagerBuilder auth) throws Exception{
+		auth
+		.userDetailsService(this.userDetailsService)
+		.passwordEncoder(this.bCryptPasswordEncoder());
+	}
+	
+	
 	
 
 }
