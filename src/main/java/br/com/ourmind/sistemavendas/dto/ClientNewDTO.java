@@ -29,6 +29,10 @@ public class ClientNewDTO implements Serializable{
 	private String email;
 	
 	@NotEmpty(message="Campo obrigatório.")
+	@Length(min=8, max=120, message="Campo deve ter no minimo 5 caracteres e no maximo 120.")
+	private String password;
+	
+	@NotEmpty(message="Campo obrigatório.")
 	private String cpfCnpj;
 	
 	private Integer typeClient;
@@ -56,7 +60,7 @@ public class ClientNewDTO implements Serializable{
 	public ClientNewDTO() {}
 	
 	public Client toEntity() {
-		Client client = new Client(null, this.name,this.email, this.cpfCnpj, TypeClient.toEnum(this.typeClient));
+		Client client = new Client(null, this.name,this.email, this.cpfCnpj, TypeClient.toEnum(this.typeClient), this.password);
 		client.getPhones().add(this.phone1);
 		
 		if(this.phone2 != null) {
@@ -88,6 +92,14 @@ public class ClientNewDTO implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getCpfCnpj() {
@@ -169,7 +181,8 @@ public class ClientNewDTO implements Serializable{
 	public void setPhone3(String phone3) {
 		this.phone3 = phone3;
 	}
-
+	
+	
 
 
 }

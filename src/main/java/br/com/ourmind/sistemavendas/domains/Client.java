@@ -20,41 +20,46 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import br.com.ourmind.sistemavendas.domains.enums.TypeClient;
 
 @Entity
-public class Client implements Serializable{
+public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
-	
-	private String name;
-	
-	private String email;
-	
-	private String cpfCnpj;
-	
-	private Integer typeClient;
-	
-	@OneToMany(mappedBy="client", cascade=CascadeType.ALL)
-	private List<Address>  adresses = new ArrayList<Address>();
-	
-	@ElementCollection
-	@CollectionTable(name="phone")
-	private Set<String> phones = new HashSet<String>();
-	
-	@OneToMany(mappedBy="client")
-	@JsonIgnore
-	private List<Order>  orders = new ArrayList<Order>();
-	
-	public Client() {}
 
-	public Client(Integer id, String name, String email, String cpfCnpj, TypeClient typeClient) {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	private String name;
+
+	private String email;
+
+	private String cpfCnpj;
+
+	private Integer typeClient;
+
+	@JsonIgnore
+	private String password;
+
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+	private List<Address> adresses = new ArrayList<Address>();
+
+	@ElementCollection
+	@CollectionTable(name = "phone")
+	private Set<String> phones = new HashSet<String>();
+
+	@OneToMany(mappedBy = "client")
+	@JsonIgnore
+	private List<Order> orders = new ArrayList<Order>();
+
+	public Client() {
+	}
+
+	public Client(Integer id, String name, String email, String cpfCnpj, TypeClient typeClient, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.cpfCnpj = cpfCnpj;
 		this.typeClient = typeClient == null ? null : typeClient.getId();
+		this.password = password;
 	}
 
 	public Integer getId() {
@@ -95,6 +100,14 @@ public class Client implements Serializable{
 
 	public void setTypeClient(TypeClient typeClient) {
 		this.typeClient = typeClient.getId();
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public List<Address> getAdresses() {
@@ -145,9 +158,5 @@ public class Client implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-	
-	
-	
+
 }

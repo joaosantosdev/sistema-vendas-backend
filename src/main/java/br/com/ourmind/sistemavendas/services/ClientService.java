@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public class ClientService {
 	@Autowired
 	private AddressService addressService;
 	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
 	public void saveAll(List<Client> clients) {
@@ -36,6 +39,7 @@ public class ClientService {
 	public Client save(Client client) {
 		client.setId(null);
 		this.addressService.saveAll(client.getAdresses());
+		client.setPassword(this.bCryptPasswordEncoder.encode(client.getPassword()));
 		return this.clientRepository.save(client);
 	}
 	
