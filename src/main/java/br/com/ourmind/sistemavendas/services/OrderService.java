@@ -75,7 +75,7 @@ public class OrderService {
 			this.itemService.save(item);
 		}
 		
-		this.emailService.sendOrderConfirmation(order);
+		this.emailService.sendOrderConfirmationHtml(order);
 		return order;
 	}
 

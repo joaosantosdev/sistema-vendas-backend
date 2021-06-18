@@ -1,5 +1,7 @@
 package br.com.ourmind.sistemavendas.services;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.mail.SimpleMailMessage;
 
 import br.com.ourmind.sistemavendas.domains.Order;
@@ -10,4 +12,7 @@ public interface EmailService {
 	
 	void send(SimpleMailMessage message);
 	
+	void sendOrderConfirmationHtml(Order order);
+	
+	void sendHtml(MimeMessage message);
 }
