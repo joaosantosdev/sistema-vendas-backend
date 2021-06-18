@@ -32,6 +32,7 @@ public class Order implements Serializable{
 	
 	@JsonFormat(pattern="dd/MM/yyyy HH:mm")
 	private Date date;
+
 	
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="order")
 	private Payment payment;
@@ -157,4 +158,5 @@ public class Order implements Serializable{
 		
 		return builder.toString();
 	}
+	
 }

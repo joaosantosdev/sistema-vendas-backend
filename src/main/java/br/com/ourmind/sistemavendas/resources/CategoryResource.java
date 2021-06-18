@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class CategoryResource {
 	private CategoryService categoryService;
 	
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> save(@Valid @RequestBody CategoryDTO categoryDTO) {
 		Category categoryCreated= this.categoryService.save(categoryDTO.toEntity());
@@ -37,6 +39,7 @@ public class CategoryResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@PathVariable Integer id,@Valid @RequestBody CategoryDTO categoryDTO) {
 		categoryDTO.setId(id);
@@ -51,13 +54,14 @@ public class CategoryResource {
 		return ResponseEntity.ok().body(category);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
 		this.categoryService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	public ResponseEntity<List<CategoryDTO>> getAll() {
 		
 		List<CategoryDTO> categories = this.categoryService.getAll()

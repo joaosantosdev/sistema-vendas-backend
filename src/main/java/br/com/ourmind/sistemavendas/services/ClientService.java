@@ -13,7 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ourmind.sistemavendas.domains.Client;
+import br.com.ourmind.sistemavendas.domains.enums.Profile;
 import br.com.ourmind.sistemavendas.repositories.ClientRepository;
+import br.com.ourmind.sistemavendas.security.UserSS;
+import br.com.ourmind.sistemavendas.security.UserService;
+import br.com.ourmind.sistemavendas.services.exeptions.AuthorizationException;
 import br.com.ourmind.sistemavendas.services.exeptions.DataIntegrityException;
 import br.com.ourmind.sistemavendas.services.exeptions.NotFoundResourceException;
 
@@ -29,6 +33,9 @@ public class ClientService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	
+	@Autowired
+	private UserService userService;
 	
 	public void saveAll(List<Client> clients) {
 		this.clientRepository.saveAll(clients);
@@ -50,6 +57,10 @@ public class ClientService {
 	}
 	
 	public Client getById(Integer id) {
+		UserSS user = this.userService.authenticated();
+		if(user == null || !user.hasRole(Profile.ADMIN) && !user.getId().equals(id)) {
+			throw new AuthorizationException("Usuário não autorizado");
+		}
 		Optional<Client> client = this.clientRepository.findById(id);
 		return client.orElseThrow(()-> new NotFoundResourceException("Categoria não encontrado"));
 	}

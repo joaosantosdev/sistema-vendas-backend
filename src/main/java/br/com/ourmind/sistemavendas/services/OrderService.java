@@ -5,15 +5,22 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.ourmind.sistemavendas.domains.Client;
 import br.com.ourmind.sistemavendas.domains.Item;
 import br.com.ourmind.sistemavendas.domains.Order;
 import br.com.ourmind.sistemavendas.domains.PaymentSlip;
 import br.com.ourmind.sistemavendas.domains.Product;
 import br.com.ourmind.sistemavendas.domains.enums.StatePayment;
 import br.com.ourmind.sistemavendas.repositories.OrderRepository;
+import br.com.ourmind.sistemavendas.security.UserSS;
+import br.com.ourmind.sistemavendas.security.UserService;
+import br.com.ourmind.sistemavendas.services.exeptions.AuthorizationException;
 import br.com.ourmind.sistemavendas.services.exeptions.NotFoundResourceException;
 
 @Service
@@ -37,6 +44,10 @@ public class OrderService {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private UserService userService;
+	
 	
 	public Order getById(Integer id) {
 		return this.orderRepository.findById(id).orElseThrow(()-> new NotFoundResourceException("Pedido não encontrado"));
@@ -77,6 +88,19 @@ public class OrderService {
 		
 		this.emailService.sendOrderConfirmationHtml(order);
 		return order;
+	}
+	
+	public Page<Order> getByClientPage(Integer page, Integer perPage, String orderBy, String direction) {
+		UserSS user = this.userService.authenticated();
+		
+		if(user == null) {
+			throw new AuthorizationException("Usuário não autorizado");
+		}
+		
+		Client client = this.clientService.getById(user.getId());
+		PageRequest pageRequest = PageRequest.of(page, perPage, Direction.valueOf(direction), orderBy);
+		
+		return this.orderRepository.findByClient(client, pageRequest);
 	}
 
 }

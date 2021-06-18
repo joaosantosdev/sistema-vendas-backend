@@ -1,3 +1,4 @@
+
 package br.com.ourmind.sistemavendas.repositories;
 
 import java.util.List;
