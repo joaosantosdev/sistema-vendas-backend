@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private static final String[] PUBLIC_MATCHERS = {
 			"/h2-console/**",
+			"/state/**",
 	};
 	
 	private static final String[] PUBLIC_MATCHERS_POST = {
@@ -76,7 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+		configuration.setAllowedMethods(Arrays.asList("POST", "DELETE", "GET", "PUT", "OPTIONS"));
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 	

@@ -2,7 +2,9 @@ package br.com.ourmind.sistemavendas.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -67,13 +69,22 @@ public class DBService {
 		c1.getProducts().addAll(Arrays.asList(p1, p2, p3));
 		c2.getProducts().addAll(Arrays.asList(p2));
 		
+		List<Product> products = new ArrayList();
+		
+		for(int i = 0; i<100; i++) {
+			Product p= new Product(null, "Produto "+(i+1), 100.0);
+			p.getCategories().add(c1);
+			
+		}
+		
 		p1.getCategories().add(c1);
 		p2.getCategories().addAll(Arrays.asList(c1, c2));
 		p3.getCategories().add(c1);
 	
 		this.categoryService.saveAll(Arrays.asList(c1,	c2));
-		this.productService.saveAll(Arrays.asList(p1, p2, p3));
-		
+		products.addAll(Arrays.asList(p1, p2, p3));
+		this.productService.saveAll(products);
+	
 		
 		State s1 = new State(null, "Minas Gerais");
 		State s2 = new State(null, "São Paulo");

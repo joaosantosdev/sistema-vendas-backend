@@ -95,5 +95,10 @@ public class ClientResource {
 		this.clientService.saveImage(file);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@RequestMapping(value="/email", method=RequestMethod.GET)
+	public ResponseEntity<Client> getClientById(@RequestParam(name="value") String email) throws IOException {
+		return ResponseEntity.ok().body(this.clientService.getByEmailSecurity(email));
+	}
 
 }

@@ -119,4 +119,17 @@ public class ClientService {
 	
 		return this.storageService.saveImage(is, this.prefixImage + user.getId());
 	}
+	
+	public Client getByEmailSecurity(String email) {
+		
+		UserSS user = this.userService.authenticated();
+		if(user == null || !user.hasRole(Profile.ADMIN) && !user.getUsername().equals(email)) {
+			throw new AuthorizationException("Usuário não autorizado");
+		}
+		Client client = this.clientRepository.findByEmail(email);
+		if(client == null) {
+			throw new NotFoundResourceException("Cliente não encontrado.");
+		}
+		return client;
+	}
 }
