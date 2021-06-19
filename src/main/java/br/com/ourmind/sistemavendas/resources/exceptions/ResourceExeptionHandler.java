@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.ourmind.sistemavendas.services.exeptions.AuthorizationException;
 import br.com.ourmind.sistemavendas.services.exeptions.DataIntegrityException;
+import br.com.ourmind.sistemavendas.services.exeptions.FileException;
 import br.com.ourmind.sistemavendas.services.exeptions.NotFoundResourceException;
 
 @ControllerAdvice
@@ -42,5 +43,10 @@ public class ResourceExeptionHandler {
 		ResponseError error = new ResponseError(HttpStatus.FORBIDDEN.value(), exception.getMessage(), System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 	}
-
+	
+	@ExceptionHandler(FileException.class)
+	public ResponseEntity<ResponseError> fileException(FileException exception, HttpServletRequest request){
+		ResponseError error = new ResponseError(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
 }

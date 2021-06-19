@@ -1,5 +1,6 @@
 package br.com.ourmind.sistemavendas.resources;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.ourmind.sistemavendas.domains.Category;
 import br.com.ourmind.sistemavendas.domains.Client;
 import br.com.ourmind.sistemavendas.dto.ClientDTO;
 import br.com.ourmind.sistemavendas.dto.ClientNewDTO;
 import br.com.ourmind.sistemavendas.services.ClientService;
+import br.com.ourmind.sistemavendas.services.StorageService;
 
 @RestController
 @RequestMapping(value="clients")
@@ -30,6 +32,7 @@ public class ClientResource {
 	
 	@Autowired
 	private ClientService clientService;
+	
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> save(@Valid @RequestBody ClientNewDTO clientNewDTO) {
@@ -85,6 +88,12 @@ public class ClientResource {
 			
 		
 		return ResponseEntity.ok().body(clients);
+	}
+	
+	@RequestMapping(value="/picture", method=RequestMethod.POST)
+	public ResponseEntity<Void> deleteById(@RequestParam(name="file") MultipartFile file) throws IOException {
+		this.clientService.saveImage(file);
+		return ResponseEntity.noContent().build();
 	}
 
 }
